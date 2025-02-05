@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+
+        <!-- Add Task Form -->
+        <form action="/add" method="POST" class="task-form">
+            <input type="text" name="title" placeholder="Task Title" required>
+            <textarea name="description" placeholder="Task Description"></textarea>
+            <label for="due_date">Due Date:</label>
+            <input type="date" name="due_date" id="due_date" required>
+            <label for="due_time">Due Time:</label>
+            <input type="time" name="due_time" id="due_time" required>
+            <label for="priority">Priority:</label>
+            <select name="priority" id="priority" required>
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+            </select>
+            <label for="category">Category:</label>
+            <select name="category" id="category" required>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+                <option value="Shopping">Shopping</option>
+                <option value="General" selected>General</option>
+            </select>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <!-- Filter Tasks Form -->
+        <h2>Filter Tasks</h2>
+        <form action="/filter" method="POST" class="filter-form">
+            <label for="status">Status:</label>
+            <select name="status" id="status">
+                <option value="">All</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <label for="priority">Priority:</label>
+            <select name="priority" id="priority">
+                <option value="">All</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+            <label for="category">Category:</label>
+            <select name="category" id="category">
+                <option value="">All</option>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+                <option value="Shopping">Shopping</option>
+                <option value="General">General</option>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+
+        <!-- Sort Tasks Form -->
+        <h2>Sort Tasks</h2>
+        <form action="/sort" method="POST" class="sort-form">
+            <label for="sort_by">Sort By:</label>
+            <select name="sort_by" id="sort_by">
+                <option value="due_date">Due Date</option>
+                <option value="priority">Priority</option>
+                <option value="category">Category</option>
+            </select>
+            <button type="submit">Sort</button>
+        </form>
+
+        <!-- Task List -->
+        <h2>Tasks</h2>
+        <ul class="task-list">
+            {% for task in tasks %}
+                <li class="task-item">
+                    <div class="task-header">
+                        <strong>{{ task[1] }}</strong>
+                        <span class="priority {{ task[6].lower() }}">{{ task[6] }}</span>
+                    </div>
+                    <div class="task-details">
+                        <p>{{ task[2] }}</p>
+                        <p>Status: <span class="status">{{ task[3] }}</span></p>
+                        <p>Due: {{ task[4] }} at {{ task[5] }}</p>
+                        <p>Category: <span class="category">{{ task[7] }}</span></p>
+                    </div>
+                    <div class="task-actions">
+                        <form action="/update/{{ task[0] }}" method="POST">
+                            <select name="status">
+                                <option value="Pending" {% if task[3] == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="In Progress" {% if task[3] == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                <option value="Completed" {% if task[3] == 'Completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                            <button type="submit">Update</button>
+                        </form>
+                        <form action="/delete/{{ task[0] }}" method="POST">
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
