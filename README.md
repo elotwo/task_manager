@@ -39,6 +39,8 @@ Styling: Custom CSS
 |    |-- style.css           # Custom CSS for styling
 |--- app.py                  # Flask backend application
 |
+|--- requirements.txt
+|
 |--- README.md               # Project documentation
 
 #DATABASE SCHEMA:
